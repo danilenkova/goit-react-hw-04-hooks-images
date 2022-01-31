@@ -1,11 +1,11 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const StyledSearchBar = styled.header`
   width: 100vw;
   top: 0;
   left: 0;
   position: sticky;
-  /* z-index: 1100; */
+  z-index: 100;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -21,8 +21,9 @@ export const StyledSearchBar = styled.header`
 `;
 
 export const Form = styled.form`
-  top: 20px;
-  @media screen and (min-width: 480px) {
+  position: relative;
+  top: 0;
+  @media screen and (max-width: 480px) {
     width: 300px;
   }
   height: 40px;
@@ -41,8 +42,8 @@ export const Form = styled.form`
 `;
 
 export const Input = styled.input`
-  @media screen and (min-width: 480px) {
-    width: 250px;
+  @media screen and (max-width: 480px) {
+    width: 240px;
   }
   height: 40px;
   width: 290px;
@@ -88,5 +89,27 @@ export const SearchButton = styled.button`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+  }
+`;
+
+export const ResetButton = styled.button`
+  position: absolute;
+  cursor: pointer;
+  bottom: 0;
+  padding: 0;
+  right: 60px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: #000000;
+  border: none;
+  background: transparent;
+  svg: {
+    width: 40px;
+    height: 40px;
+    fill: currentColor;
+  }
+  :hover {
+    color: #0093e9;
   }
 `;

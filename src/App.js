@@ -60,9 +60,7 @@ function App() {
         const type = page === startPage ? "get" : "add";
         dispatch({ type: type, payload: results.hits });
 
-        if (page !== startPage) {
-          setItemToScroll(results.hits[0].id);
-        }
+        setItemToScroll(results.hits[0].id);
       } catch (error) {
         myAlert(NOT_ALERTS.FETCH_ERROR);
       } finally {
@@ -80,16 +78,13 @@ function App() {
   }, [totalHits, images]);
 
   useEffect(() => {
-    if (isFirstRender.current) return;
-    if (!itemToScroll) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
+    if (itemToScroll) {
+      const yOffset = -80;
+      const element = document.getElementById(itemToScroll);
+      const y =
+        element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: "smooth" });
     }
-    const yOffset = -80;
-    const element = document.getElementById(itemToScroll);
-    const y =
-      element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-    window.scrollTo({ top: y, behavior: "smooth" });
   }, [itemToScroll]);
 
   const handleFormSubmit = (query) => {

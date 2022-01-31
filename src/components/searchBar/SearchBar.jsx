@@ -1,8 +1,15 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import { StyledSearchBar, Form, Input, SearchButton } from "./SearchBar.styled";
+import {
+  StyledSearchBar,
+  Form,
+  Input,
+  SearchButton,
+  ResetButton,
+} from "./SearchBar.styled";
 import { NOT_ALERTS, myAlert } from "../service/alerts";
 import { ImSearch } from "react-icons/im";
+import { VscChromeClose } from "react-icons/vsc";
 
 function SearchBar({ onSubmit }) {
   const [query, setQuery] = useState("");
@@ -30,6 +37,11 @@ function SearchBar({ onSubmit }) {
           autoFocus
           placeholder="Search images and photos"
         />
+        {query && (
+          <ResetButton type="reset" onClick={() => setQuery("")}>
+            <VscChromeClose />
+          </ResetButton>
+        )}
         <SearchButton type="submit">
           <ImSearch />
         </SearchButton>

@@ -1,69 +1,61 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { createPortal } from 'react-dom';
-import { Overlay, StyledModal, ModalImage } from './Modal.styled';
+import { useEffect } from "react";
+import PropTypes from "prop-types";
+import { createPortal } from "react-dom";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from "react-responsive-carousel";
+import { Overlay, ModalImage } from "./Modal.styled";
 
-const modalRoot = document.querySelector('#modal-root');
+const modalRoot = document.querySelector("#modal-root");
 
-export default class Modal extends Component {
-  state = {
-    images: this.props.collection,
-    currentImage: this.props.currentImage,
-    index: 0,
-  };
-  static propTypes = {
-    collection: PropTypes.array.isRequired,
-    currentImage: PropTypes.object.isRequired,
-  };
-  componentDidMount() {
-    window.addEventListener('keydown', this.handleKeyDown);
-  }
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.handleKeyDown);
-  }
-  handleKeyDown = e => {
-    if (e.code === 'Escape') {
-      this.props.onClose();
-    }
-    if (e.code === 'ArrowRight') {
-      this.setState({ index: this.state.images.indexOf(this.state.currentImage) + 1 });
-      if (this.state.index === this.state.images.length) {
-        this.getImage(0);
-        return;
+export default function Modal({ collection, currentImage, onClose }) {
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.code === "Escape") {
+        onClose();
       }
-      this.getImage(this.state.index);
-    }
-    if (e.code === 'ArrowLeft') {
-      this.setState({ index: this.state.images.indexOf(this.state.currentImage) - 1 });
-      if (this.state.index < 0) {
-        this.getImage(this.state.images.length - 1);
-        return;
-      }
-      this.getImage(this.state.index);
-    }
-  };
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [onClose]);
 
-  getImage = index => {
-    this.setState({ currentImage: this.state.images[index] });
-  };
-
-  handleBackdropClick = e => {
+  const handleBackdropClick = (e) => {
     if (e.target === e.currentTarget) {
-      this.props.onClose();
+      onClose();
     }
   };
 
-  render() {
-    return createPortal(
-      <Overlay onClick={this.handleBackdropClick}>
-        <StyledModal>
-          <ModalImage
-            src={this.state.currentImage.largeImageURL}
-            alt={this.state.currentImage.tags}
-          />
-        </StyledModal>
-      </Overlay>,
-      modalRoot,
-    );
-  }
+  return createPortal(
+    <Overlay onClick={handleBackdropClick}>
+      <Carousel
+        className="presentation-mode"
+        autoFocus={true}
+        centerSlidePercentage={100}
+        dynamicHeight={false}
+        infiniteLoop={true}
+        renderIndicator={false}
+        useKeyboardArrows
+        selectedItem={collection.indexOf(currentImage)}
+        showStatus={false}
+        showThumbs={false}
+      >
+        {collection.map((item) => {
+          return (
+            <ModalImage
+              key={item.id}
+              src={item.largeImageURL}
+              alt={item.tags}
+            />
+          );
+        })}
+      </Carousel>
+    </Overlay>,
+    modalRoot
+  );
 }
+
+Modal.propTypes = {
+  collection: PropTypes.array.isRequired,
+  currentImage: PropTypes.object.isRequired,
+};
